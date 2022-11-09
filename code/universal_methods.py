@@ -10,6 +10,10 @@ from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import roc_auc_score, plot_roc_curve,roc_curve
 from sklearn.metrics import plot_confusion_matrix,ConfusionMatrixDisplay, confusion_matrix
+import cv2
+import tensorflow as tf
+import matplotlib.cm as cm
+
 
 
 
@@ -68,16 +72,16 @@ class Universal:
 	    # taking amount of rows for plot
         rows = model.layers[layer_num].output.shape[-1]
         ix = 1
-        fig, axs = plt.subplots(nrows=1, ncols=rows, figsize=(10, 2))
+        fig, axs = plt.subplots(nrows=1, ncols=rows, figsize=(16, 3))
         plt.subplots_adjust(hspace=0.1)
-        fig.suptitle("Features of convolutional layer", fontsize=18, y=0.95)
+        fig.suptitle("Features of convolutional layer", fontsize=18, y=0.99)
         for _ in range(rows):
             # specify subplot and turn of axis
-            axs[ix-1].imshow(feature_maps[0, :, :, ix-1])
+            axs[ix-1].imshow(feature_maps[0, :, :, ix-1],aspect='equal')
             axs[ix-1].set_xticks([])
             axs[ix-1].set_yticks([])
             ix += 1
-        plt.savefig(f'../resources/{savename}.jpg')
+        plt.savefig(f'../resources/layers/{savename}.jpg',bbox_inches = 'tight')
         # show the figure
         return axs
 
@@ -125,33 +129,33 @@ class Universal:
 
 
 
-    def plot_results(self,history_,loss):
-        plt.tight_layout()
-        if (loss=="loss"):        
-            train_loss = history_.history['loss']
-            test_loss = history_.history['val_loss']
-            label="Loss"
-        elif (loss=="acc"):
-            train_loss = history_.history['acc']
-            test_loss = history_.history['val_acc']
-            label="Accuracy"
+    # def plot_results(self,history_,loss):
+    #     plt.tight_layout()
+    #     if (loss=="loss"):        
+    #         train_loss = history_.history['loss']
+    #         test_loss = history_.history['val_loss']
+    #         label="Loss"
+    #     elif (loss=="acc"):
+    #         train_loss = history_.history['acc']
+    #         test_loss = history_.history['val_acc']
+    #         label="Accuracy"
         
-        epoch_labels = history_.epoch
+    #     epoch_labels = history_.epoch
 
-        # Set figure size.
-        plt.figure(figsize=(12, 8))
+    #     # Set figure size.
+    #     plt.figure(figsize=(12, 8))
 
-        # Generate line plot of training, testing loss over epochs.
-        plt.plot(train_loss, label=f'Training {label}', color='#185fad')
-        plt.plot(test_loss, label=f'Testing {label}', color='orange')
+    #     # Generate line plot of training, testing loss over epochs.
+    #     plt.plot(train_loss, label=f'Training {label}', color='#185fad')
+    #     plt.plot(test_loss, label=f'Testing {label}', color='orange')
 
-        # Set title
-        plt.title(f'Training and Testing {label} by Epoch', fontsize=25)
-        plt.xlabel('Epoch', fontsize=18)
-        plt.ylabel('Binary Crossentropy', fontsize=18)
-        plt.xticks(epoch_labels, epoch_labels)    # ticks, labels
+    #     # Set title
+    #     plt.title(f'Training and Testing {label} by Epoch', fontsize=25)
+    #     plt.xlabel('Epoch', fontsize=18)
+    #     plt.ylabel('Binary Crossentropy', fontsize=18)
+    #     plt.xticks(epoch_labels, epoch_labels)    # ticks, labels
 
-        plt.legend(fontsize=18);
+    #     plt.legend(fontsize=18);
    
 
     def plot_results_duo(self,history_,model,X_test,y_test,savename="model_result"):
@@ -264,7 +268,8 @@ class Universal:
         ax13.set_xlabel('False Positive Rate') 
         ax13.set_ylabel('True Positive Rate')
         fig.tight_layout()
-        plt.savefig(f'../resources/{savename}.jpg')
+        
+        plt.savefig(f'../resources/{savename}.jpg',bbox_inches = 'tight')
 
 
         return matches,mismatches,fig
@@ -291,8 +296,77 @@ class Universal:
 		        # plot filter channel in grayscale
                 ix += 1
         # show the figure
-        plt.savefig(f'../resources/{savename}.jpg')
+        plt.savefig(f'../resources/layers/{savename}.jpg')
         plt.show()
+   
+    def get_conv(self,model,img_get_grad,model_name,num=-1,pred_index=None,alpha=0.6):
+        print(model.layers)
+        #https://keras.io/examples/vision/grad_cam/
+        model.layers[-1].activation = None
+
+        img = img_get_grad
+        conv_layers=[]
+        for layer in model.layers:
+            if 'conv' in str(layer):
+                conv_layers.append(layer.name)
+
+
+        grad_model = tf.keras.models.Model(
+            [model.inputs], [model.get_layer(conv_layers[num]).output, model.output]
+        )
+        img_array=np.expand_dims(img_get_grad, axis=0)
+
+        with tf.GradientTape() as tape:
+            last_conv_layer_output, preds = grad_model(img_array)
+            if pred_index is None:
+                pred_index = tf.argmax(preds[0])
+            class_channel = preds[:, pred_index]
+        grads = tape.gradient(class_channel, last_conv_layer_output)
+        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        last_conv_layer_output = last_conv_layer_output[0]
+        heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+        heatmap = tf.squeeze(heatmap)
+
+        heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+        heatmap=heatmap.numpy()
+
+        # print(f"Predicted: prob {preds[0][0]}, label {class_labels[round(preds[0][0])]}")
+        # print(f"Predicted: {preds[0][0]}")
+        # return heatmap.numpy()
+        # plt.matshow(heatmap)
+        # plt.axis('off')
+        # plt.show()
+
+        heatmap =  cv2.normalize(heatmap, None, alpha = 0, beta = 255, norm_type = cv2.NORM_MINMAX, dtype = cv2.CV_8U)
+        
+        # plt.savefig(f"../resources/grid_cam/{model_name}_heatmap.jpg")
+
+        jet = cm.get_cmap("jet")
+         # Use RGB values of the colormap
+        jet_colors = jet(np.arange(256))[:, :3]
+        jet_heatmap = jet_colors[heatmap]
+
+        jet_heatmap = tf.keras.utils.array_to_img(jet_heatmap)
+        jet_heatmap = jet_heatmap.resize((img.shape[1], img.shape[0]))
+        jet_heatmap = tf.keras.utils.img_to_array(jet_heatmap)
+
+        superimposed_img = jet_heatmap * alpha + img
+        superimposed_img = tf.keras.utils.array_to_img(superimposed_img)
+
+        plt.gca().set_axis_off()
+        plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
+                hspace = 0, wspace = 0)
+        plt.margins(0,0)
+        plt.gca().xaxis.set_major_locator(plt.NullLocator())
+        plt.gca().yaxis.set_major_locator(plt.NullLocator())
+        plt.imshow(img_get_grad)
+        # pad_inches = 0)
+        plt.imshow(superimposed_img,alpha=alpha)
+        plt.savefig(f"../resources/grid_cam/{model_name}_final.jpg",bbox_inches = 'tight')
+        # return conv_layers[num]
+
+
+
 
 
 
