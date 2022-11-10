@@ -13,6 +13,17 @@ from sklearn.metrics import plot_confusion_matrix,ConfusionMatrixDisplay, confus
 import cv2
 import tensorflow as tf
 import matplotlib.cm as cm
+from PIL import Image
+
+
+import glob
+
+# For reproducibility
+import random
+seed = 42
+np.random.seed(seed)
+# random.seed(seed)
+tf.random.set_seed(seed)
 
 
 
@@ -100,6 +111,20 @@ class Universal:
             stop+=1
 
         return np.array(res)
+
+    def generate_samples(self, amount_for_each_class=3):
+        image_list = []
+        samples=np.array([])
+        for filename in glob.glob('../data/real_and_fake_face/fake/*.jpg'): #assuming gif
+            image_list.append(filename)   
+        matching = [s for s in image_list if "hard" in s]
+        samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
+        matching = [s for s in image_list if "easy" in s]
+        samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
+        matching = [s for s in image_list if "mid" in s]
+        samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
+        samples=[np.asarray(Image.open(path)) for path in samples]
+        return samples
 
     def plot_samples(self,faces,amount,side,name,savename="samples_plot"): 
         """
