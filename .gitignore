@@ -1,1 +1,3 @@
 capstone/data/
+capstone/__pycache__
+capstone/.ipynb_checkpoints
