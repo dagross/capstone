@@ -115,13 +115,13 @@ class Universal:
     def generate_samples(self, amount_for_each_class=3):
         image_list = []
         samples=np.array([])
-        for filename in glob.glob('../data/real_and_fake_face/fake/*.jpg'): #assuming gif
+        for filename in glob.glob('../data/real_and_fake_face/fake/*.jpg'): #looking for all .jpg files in the folder
             image_list.append(filename)   
-        matching = [s for s in image_list if "hard" in s]
-        samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
         matching = [s for s in image_list if "easy" in s]
         samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
         matching = [s for s in image_list if "mid" in s]
+        samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
+        matching = [s for s in image_list if "hard" in s]
         samples=np.append(samples,random.choices(matching,k=amount_for_each_class))
         samples=[np.asarray(Image.open(path)) for path in samples]
         return samples
@@ -153,35 +153,6 @@ class Universal:
         plt.savefig(f'../resources/{name}.jpg')
 
 
-
-    # def plot_results(self,history_,loss):
-    #     plt.tight_layout()
-    #     if (loss=="loss"):        
-    #         train_loss = history_.history['loss']
-    #         test_loss = history_.history['val_loss']
-    #         label="Loss"
-    #     elif (loss=="acc"):
-    #         train_loss = history_.history['acc']
-    #         test_loss = history_.history['val_acc']
-    #         label="Accuracy"
-        
-    #     epoch_labels = history_.epoch
-
-    #     # Set figure size.
-    #     plt.figure(figsize=(12, 8))
-
-    #     # Generate line plot of training, testing loss over epochs.
-    #     plt.plot(train_loss, label=f'Training {label}', color='#185fad')
-    #     plt.plot(test_loss, label=f'Testing {label}', color='orange')
-
-    #     # Set title
-    #     plt.title(f'Training and Testing {label} by Epoch', fontsize=25)
-    #     plt.xlabel('Epoch', fontsize=18)
-    #     plt.ylabel('Binary Crossentropy', fontsize=18)
-    #     plt.xticks(epoch_labels, epoch_labels)    # ticks, labels
-
-    #     plt.legend(fontsize=18);
-   
 
     def plot_results_duo(self,history_,model,X_test,y_test,savename="model_result"):
                
