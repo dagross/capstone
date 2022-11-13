@@ -1,7 +1,103 @@
-# capstone
+
+# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)                                                 
+# Final Project : Detecting fake images with Convolution Neural Network
+### Problem Statement
+In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. Company would like to find a way to solve this problem without employee participation, since such approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, model should get image containing user's face and predict whether it is real or not.
+Project success will be evaluated using resulting f1 score (since we are interested in correct prediction for both classes) and accuracy score. Resulting scores should be as high as possible, but not lower than 53 percent, which is baseline accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
 
 
-Next steps:
+## Brief Summary of Analysis and Interpretations
+For solving the stated problem, I was provided with a dataset of images, contains **960** fake and **1081** real images, **2041** in total. Baseline accuracy is **52.9%**. Each image has a resolution 600x600 pixels with 3 color channels.
+
+<img src="./resources/General%20label%20distribution.jpg" alt="drawing" style="width:600px;"/>
+ 
+&nbsp;And here are some examples of fake images: 
+
+<img src="./resources/sample_images_e_m_h.jpg" alt="drawing" style="width:600px;"/>
+
+After EDA and basic check of images metadata, I've started modeling. This process was splited for 4 steps, by the number of each model I've tried. 
+
+### 1. Simple Convolution Neural Network
+ Layer (type)|Output Shape|        
+|:---:|:---:| 
+ conv2d (Conv2D)|(None, 593, 593, 8) |
+ max_pooling2d (MaxPooling2D) | (None, 197, 197, 8)|         
+ conv2d_1 (Conv2D)           |(None, 192, 192, 8) |         
+ max_pooling2d_1 (MaxPooling2D) | (None, 96, 96,8)|         
+ flatten (Flatten)           |(None, 73728)       |               
+ dense (Dense)               |(None, 64)          |         
+ dense_1 (Dense)             |(None, 1)           |
+
+Results were unsatisfactory. X_test set totally contained 205 images and model predicted that all of them are true/real images.  
+
+<img src="./resources/model_simple.jpg" alt="drawing" style="width:600px;"/>
+
+ROC-AUC plot shows that true and false image sets are not just overlapping - for the model they are basically identically and it clearly doesn't learn as it should. This can be caused either by simplicity of the model, either by images which need more manipulation/augmentation to highlight their differences.
+To exclude model assumption, I've passed our dataset through much more powerful pre-trained model.
+### 2. VGG Pretrained Convolution Neural Network
+<img src="./resources/vgg.jpg" alt="drawing" style="width:600px;"/>
+
+Results of modeling were identical to the simple model. VGG is not able to catch the signal and recognize difference between two classes.
+
+### 3. EfficientNetB4 Pretrained Convolution Neural Network
+As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380 so I've re-generated dataset.
+<img src="./resources/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
+
+Still no good results, but we can see on accuracy subplot that model started learning, and processed dataset much faster because of the smaller dataset size. 
+
+### 4. Custom Convolution Neural Network
+So, my next attempt was custom model with a much smaller input images size 150x150x3. That greatly increased iteration speed and let me to manually adjust layers for each iteration.
+<img src="./resources/custom_model.jpg" alt="drawing" style="width:600px;"/>
+
+Model finally is able to differentiate two classes and make correct predictions.
+All scores are beyond baseline. Although, due to AUC score, both classes are very similar/overlapped, it definitely made significant progress.
+
+For both matches and mismatches, it was hard to highlight common features - fake types were mixed, so as color schemes, photo perspective, facetype due to sex, etc. But still, we have a robust result. Difference in scores between first three models and the last one shows, that change of input images positively affected model performance, in addition to much less time needed to process.
+As a next stage, I've tried to further improve it's performance with augmentation technics and analyze results more deeply.
+
+### 4.5 Custom Convolution Neural Network with data Augmentation
+To complete this stage, I've chosen 17 various technics:
+
+|Augmentation name|Description|
+|:---:|:---:| 
+|AdditiveGaussianNoise|Add noise sampled from gaussian distributions elementwise to images|
+|Invert|Inverts all values in images for 50% of cases|
+|Solarize|This is the same as Invert, but sets a default threshold|        
+|JpegCompression|Degrade the quality of images by JPEG-compressing them|
+|BlendAlpha|BlendAlphaSimplexNoise Convert each image to pure grayscale and alpha-blend the result with the original image|
+|MeanShiftBlur|Apply a pyramidic mean shift filter|
+|RandAugment|Adds a random augmentation|
+|AddToHueAndSaturation|Increases or decreases hue and saturation by random values|
+|SigmoidContrast|Modifies the contrast of images|
+|AllChannelsCLAHE, CLAHE|Applies Contrast Limited Adaptive Histogram Equalization to images, transforms to a target colorspace extracts an intensity-related channel ,and converts back to the original colorspace
+|Sharpen|Sharpens images and overlays the result with the original image|
+|Emboss|Pronounces highlights and shadows|
+|EdgeDetect, DirectedEdgeDetect|Generate a black & white edge image and alpha-blend it with the input image|
+
+This is a sample plot with examples of augmentations applied to images.
+
+<img src="./resources/sample_images_augmented.jpg" alt="drawing" style="height:400px;"/>
+
+On this example we can see, that some of the technics are really effective at highlighting borders between fake and real image parts. 
+
+And here are modeling results:
+
+<img src="./resources/Custom_model_augmented.jpg" alt="drawing" style="height:400px;"/>
+
+
+Model summary shows:
+1. We've definitely reached accuracy improvement of the model due to the augmentations.
+2. Comparing examples of matches and mismatches, it is clear, that model is much better with "easy" and "medium" fakes and fails more on "hard" ones. And that is understandable - even human eye sometimes can not surely say if those are real or not. Evidence of pixel map deformation are not obvious.
+3. ROC AUC. 0.5 would mean that "fake" and "real" classes are absolutely the same. 1 would say, that two classes are completely different and model can differentiate them. We have **0.561** - classes are extremely similar and overlapped for the model, but model is able to differ them. 
+4. The difference between non augmented and augmented models is **4 to 6** percents, on a big amount of data, this improvement will be very noticeable. 
+5. Training and testing accuracy scores look pretty good, model doesn't overfit, I'd say it is in a sweet spot. 
+
+Results of data augmentations are noticeable good. Basically, trying to detect fake images or fake part of images, we are trying to detect augmentations, with help of other augmentations I am applying to my dataset. So, despite minor success with "easy" fakes and "mid" fakes, summary shows, that "hard" fakes are more challenging for model.
+
+## Next steps:
 I would definitely want to apply Photo Forensics approach to detect modified parts of the images. This method looks very promising, although its implementation requires understanding of photo algorithms and math behind, it looks very promising.
 https://farid.berkeley.edu/downloads/publications/wifs17.pdf
- 
+
+
+## Conclusions 
+As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **0.6634** and f1 score at **0.6079**. A ~13 percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 35% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyse economical effect.
