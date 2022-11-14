@@ -72,7 +72,7 @@ class Universal:
         ix = 1        
         fig, axs = plt.subplots(nrows=1, ncols=rows, figsize=(16, 3))
         plt.subplots_adjust(hspace=0.1)
-        fig.suptitle("Features of convolutional layer", fontsize=18, y=0.99)
+        fig.suptitle(f"Features of convolutional layer {layer_num}", fontsize=18, y=0.99)
         #adds resulting features to subplots
         for _ in range(rows):
             # specify subplot and turn of axis
@@ -81,7 +81,7 @@ class Universal:
             axs[ix-1].set_yticks([])
             ix += 1
         # saves resulting plot
-        plt.savefig(f'../resources/layers/{savename}.jpg',bbox_inches = 'tight')
+        plt.savefig(f'../resources/{savename}.jpg',bbox_inches = 'tight')
         # show the figure
         return axs
 
@@ -165,7 +165,7 @@ class Universal:
         plt.barh("True images",true_class,.5)
         plt.barh("Fake images",fake_class,.5)
         # saves resulting plot
-        plt.savefig(f'../resources/{name}.jpg')
+        plt.savefig(f'../resources/02/{name}.jpg')
 
 
 
@@ -333,7 +333,7 @@ class Universal:
                 plt.imshow(f[:, :, 0], cmap='gray')
                 ix += 1
         # saves resulting plot
-        plt.savefig(f'../resources/layers/{savename}.jpg')
+        plt.savefig(f'../resources/{savename}.jpg')
         # show the figure
         plt.show()
    
@@ -398,7 +398,7 @@ class Universal:
         plt.imshow(img_get_grad)
         plt.imshow(superimposed_img,alpha=alpha)
         # saves resulting image
-        plt.savefig(f"../resources/grid_cam/{model_name}_final.jpg",bbox_inches = 'tight')
+        plt.savefig(f"../resources/{model_name}_final_grid_cam.jpg",bbox_inches = 'tight')
 
 
 

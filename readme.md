@@ -9,15 +9,18 @@ Project success will be evaluated using resulting f1 score (since we are interes
 ## Brief Summary of Analysis and Interpretations
 For solving the stated problem, I was provided with a dataset of images, contains **960** fake and **1081** real images, **2041** in total. Baseline accuracy is **52.9%**. Each image has a resolution 600x600 pixels with 3 color channels.
 
-<img src="./resources/General%20label%20distribution.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/02/General%20label%20distribution.jpg" alt="drawing" style="width:600px;"/>
  
-&nbsp;And here are some examples of fake images: 
+And here are some examples of fake images: 
 
-<img src="./resources/sample_images_e_m_h.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/03/sample_images_e_m_h.jpg" alt="drawing" style="width:600px;"/>
 
 After EDA and basic check of images metadata, I've started modeling. This process was splited for 4 steps, by the number of each model I've tried. 
 
 ### 1. Simple Convolution Neural Network
+
+Model structure:
+
  Layer (type)|Output Shape|        
 |:---:|:---:| 
  conv2d (Conv2D)|(None, 593, 593, 8) |
@@ -30,29 +33,56 @@ After EDA and basic check of images metadata, I've started modeling. This proces
 
 Results were unsatisfactory. X_test set totally contained 205 images and model predicted that all of them are true/real images.  
 
-<img src="./resources/model_simple.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/02/model_simple.jpg" alt="drawing" style="width:600px;"/>
 
 ROC-AUC plot shows that true and false image sets are not just overlapping - for the model they are basically identically and it clearly doesn't learn as it should. This can be caused either by simplicity of the model, either by images which need more manipulation/augmentation to highlight their differences.
 To exclude model assumption, I've passed our dataset through much more powerful pre-trained model.
 ### 2. VGG Pretrained Convolution Neural Network
-<img src="./resources/vgg.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/02/vgg.jpg" alt="drawing" style="width:600px;"/>
 
-Results of modeling were identical to the simple model. VGG is not able to catch the signal and recognize difference between two classes.
+Results of modeling were identical to the simple model. VGG is not able to catch the signal and recognize difference between two classes. And classes are absolutely the same for the model.
 
 ### 3. EfficientNetB4 Pretrained Convolution Neural Network
 As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380 so I've re-generated dataset.
-<img src="./resources/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/02/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
 
 Still no good results, but we can see on accuracy subplot that model started learning, and processed dataset much faster because of the smaller dataset size. 
 
 ### 4. Custom Convolution Neural Network
 So, my next attempt was custom model with a much smaller input images size 150x150x3. That greatly increased iteration speed and let me to manually adjust layers for each iteration.
-<img src="./resources/custom_model.jpg" alt="drawing" style="width:600px;"/>
+
+Model structure:
+
+ Layer (type)|Output Shape|        
+|:---:|:---:| 
+ |conv2d_13 (Conv2D)                         |(None, 150, 150, 8) |
+ |batch_normalization_12 (BatchNormalization)|(None, 150, 150, 8) |
+ |max_pooling2d_13 (MaxPooling2D)            |(None, 75, 75, 8)   |
+ |conv2d_14 (Conv2D)                         |(None, 75, 75, 8)   |
+ |batch_normalization_13 (BatchNormalization)|(None, 75, 75, 8)   |
+ |max_pooling2d_14 (MaxPooling2D)            |(None, 38, 38, 8)   |
+ |conv2d_15 (Conv2D)                         |(None, 38, 38, 16)  |
+ |batch_normalization_14 (BatchNormalization)|(None, 38, 38, 16)  |
+ |max_pooling2d_15 (MaxPooling2D)            |(None, 19, 19, 16)  |
+ |conv2d_16 (Conv2D)                         |(None, 19, 19, 16)  |
+ |batch_normalization_15 (BatchNormalization)|(None, 19, 19, 16)  |
+ |max_pooling2d_16 (MaxPooling2D)            |(None, 5, 5, 16)    |
+ |flatten_3 (Flatten)                        |(None, 400)         |
+ |dropout_6 (Dropout)                        |(None, 400)         |
+ |dense_6 (Dense)                            |(None, 16)          |
+ |leaky_re_lu_3 (LeakyReLU)                  |(None, 16)          |
+ |dropout_7 (Dropout)                        |(None, 16)          |
+ |dense_7 (Dense)                            |(None, 1)           |
+
+
+
+
+<img src="./resources/02/custom_model.jpg" alt="drawing" style="width:600px;"/>
 
 Model finally is able to differentiate two classes and make correct predictions.
 All scores are beyond baseline. Although, due to AUC score, both classes are very similar/overlapped, it definitely made significant progress.
 
-For both matches and mismatches, it was hard to highlight common features - fake types were mixed, so as color schemes, photo perspective, facetype due to sex, etc. But still, we have a robust result. Difference in scores between first three models and the last one shows, that change of input images positively affected model performance, in addition to much less time needed to process.
+For both matches and mismatches, it was hard to highlight common features - fake types were mixed, so as color schemes, photo perspective, facetype due to sex, etc. But still, we had a robust result. Difference in scores between first three models and the last one shows, that change of input images positively affected model performance, in addition to much less time needed to process.
 As a next stage, I've tried to further improve it's performance with augmentation technics and analyze results more deeply.
 
 ### 4.5 Custom Convolution Neural Network with data Augmentation
@@ -76,13 +106,13 @@ To complete this stage, I've chosen 17 various technics:
 
 This is a sample plot with examples of augmentations applied to images.
 
-<img src="./resources/sample_images_augmented.jpg" alt="drawing" style="height:400px;"/>
+<img src="./resources/03/sample_images_augmented.jpg" alt="drawing" style="height:400px;"/>
 
 On this example we can see, that some of the technics are really effective at highlighting borders between fake and real image parts. 
 
 And here are modeling results:
 
-<img src="./resources/Custom_model_augmented.jpg" alt="drawing" style="height:400px;"/>
+<img src="./resources/03/Custom_model_augmented.jpg" alt="drawing" style="width:600px;"/>
 
 
 Model summary shows:
