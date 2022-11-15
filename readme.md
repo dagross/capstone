@@ -3,13 +3,13 @@
 # Final Project : Detecting Fake Images with Convolution Neural Network
 
 [Problem Statement](#problem-statement)\
-[Brief Summary of Analysis and Interpretations](#brief-summary-of-analysis-and-interpretations)
-[1. Simple Convolution Neural Network](#1-simple-convolution-neural-network)
-[2. VGG Pretrained Convolution Neural Network](#2-vgg-pretrained-convolution-neural-network)
-[3. EfficientNetB4 Pretrained Convolution Neural Network](#3-efficientnetb4-pretrained-convolution-neural-network)
-[4. Custom Convolution Neural Network](#4-custom-convolution-neural-network)
-[4.5 Custom Convolution Neural Network with data Augmentation](#45-custom-convolution-neural-network-with-data-augmentation)
-[Next steps](#next-steps)
+[Brief Summary of Analysis and Interpretations](#brief-summary-of-analysis-and-interpretations)\
+[1. Simple Convolution Neural Network](#1-simple-convolution-neural-network)\
+[2. VGG Pretrained Convolution Neural Network](#2-vgg-pretrained-convolution-neural-network)\
+[3. EfficientNetB4 Pretrained Convolution Neural Network](#3-efficientnetb4-pretrained-convolution-neural-network)\
+[4. Custom Convolution Neural Network](#4-custom-convolution-neural-network)\
+[4.5 Custom Convolution Neural Network with data Augmentation](#45-custom-convolution-neural-network-with-data-augmentation)\
+[Next steps](#next-steps)\
 [Conclusions](#Conclusions)
 
 
