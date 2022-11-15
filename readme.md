@@ -12,7 +12,34 @@
 [Summary Results Table](#summary-results-table)\
 [Next steps](#next-steps)\
 [Conclusions](#Conclusions)
+## Files
+Path | Description
+------------ | -------------
+[01_data_acq_and_eda](code/01%20data_acq_and_eda.ipynb) | Data acquisition and basic EDA
+[02_modeling](code/02_modeling.ipynb) | Contains main modeling code, 4 models
+[03_augmentations](code/03_augmentation_modeling.ipynb) | Adding augmented dataset, testing on a best model from 02_modeling
+[universal_methods](/code/universal_methods.py) | Contains methods, that are being used more than once
+[resources](/resources/) | Contains all graphical data, plot etc., each document has it's folder
+[data/fake](/data/real_and_fake_face/fake/) | Dataset of fake images
+[data/real](/data/real_and_fake_face/real/) | Dataset of real images
+[data/real](/data/real_and_fake_face/real/) | Dataset of real images
+[Fake Faces Detection Project](/Fake%20Faces%20Detection%20Project.pdf) | Presentation file
+---
+#### Preinstalled Library Requirements
+ 
+[importlib](https://pypi.org/project/importlib/)\
+[PIL](https://pillow.readthedocs.io/en/stable/installation.html)\
+[GarbageCollector](https://docs.python.org/3/library/gc.html)\
+[imgaug](openai.com)\
+[opencv2](https://pypi.org/project/opencv-python/)
 
+ 
+ 
+ 
+
+
+
+---
 
 ### Problem Statement
 In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. The company would like to find a way to solve this problem without employee participation, since such an approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, the model should get an image containing a user's face and predict whether it is real or not.
