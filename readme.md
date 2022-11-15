@@ -9,6 +9,7 @@
 [3. EfficientNetB4 Pretrained Convolution Neural Network](#3-efficientnetb4-pretrained-convolution-neural-network)\
 [4. Custom Convolution Neural Network](#4-custom-convolution-neural-network)\
 [4.5 Custom Convolution Neural Network with data Augmentation](#45-custom-convolution-neural-network-with-data-augmentation)\
+[Summary Results Table](#summary-results-table)\
 [Next steps](#next-steps)\
 [Conclusions](#Conclusions)
 
@@ -33,7 +34,7 @@ After EDA and basic check of images metadata, I've started modeling. This proces
 
 Model structure:
 
- Layer (type)|Output Shape|        
+|Layer (type)|Output Shape|        
 |:---:|:---:| 
  conv2d (Conv2D)|(None, 593, 593, 8) |
  max_pooling2d (MaxPooling2D) | (None, 197, 197, 8)|         
@@ -126,6 +127,14 @@ And here are modeling results:
 
 <img src="./resources/03/Custom_model_augmented.jpg" alt="drawing" style="width:600px;"/>
 
+## Summary Results Table
+Model name |Accuracy|        
+|:---:|:---:| 
+|Simple Convolution Neural Network (baseline)|0.53|
+|VGG Pretrained Convolution Neural Network|0.53|
+|EfficientNetB4 Pretrained Convolution Neural Network|0.53|
+|Custom Convolution Neural Network|0.56|
+|Custom Convolution Neural Network with Augmentations|**0.58**|
 
 Model summary shows:
 1. We've reached  accuracy improvement of the model due to the augmentations (approx **2.5** percent).
