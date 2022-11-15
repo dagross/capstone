@@ -33,12 +33,6 @@ Path | Description
 [imgaug](openai.com)\
 [opencv2](https://pypi.org/project/opencv-python/)
 
- 
- 
- 
-
-
-
 ---
 
 ### Problem Statement
@@ -94,7 +88,7 @@ Results of modeling were identical to the simple model. VGG is not able to catch
 ### 3. EfficientNetB4 Pretrained Convolution Neural Network
 [Link to notebook](files/../code/02_modeling.ipynb)
 
-As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380 so I've re-generated dataset.
+As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380x3 so I've re-generated dataset.
 
 <img src="./resources/02/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
 
@@ -198,5 +192,5 @@ https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 
 ## Conclusions
-The dataset I've been working on in this project is a good example of the real situation with fake images. Every day, new approaches and technologies appear and some examples of fake shows that in the near future it is unlikely that a person will be able to correctly determine the authenticity of the image. For that purpose we will need to develop new techniques that will be able to look further and deeper into image structure. For now, considering difficulty levels of the fake images, I would say, that this project's results are successful.
-As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **~0.59**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
+
+The dataset I've been working on in this project is a good example of the real situation with fake images. Every day, new approaches and technologies appear and new examples of fakes show that in the near future it is unlikely that a person will be able to correctly determine the authenticity of the image. For that purpose, we will need to develop new techniques that will be able to look further and deeper into image structure. Apart from the main goal, this project seeks to test CNN model on a mixed fake dataset. So, considering this difficulty levels of the fake images, I would say that this project's results are successful. As it was specified in the problem statement, the model results exceed the baseline accuracy **(0.529)** with accuracy at **~0.59**. A **~5.6** percent increase in fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders use this model; however, as there is still a mistake in 41% of classifications, the most optimal solution would be to implement it first on a small testing campaign to deeply analyze the model's effectiveness.
