@@ -1,6 +1,6 @@
 
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)                                                 
-# Final Project : Detecting fake images with Convolution Neural Network
+# Final Project : Detecting Fake Images with Convolution Neural Network
 ### Problem Statement
 In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. Company would like to find a way to solve this problem without employee participation, since such approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, model should get image containing user's face and predict whether it is real or not.
 Project success will be evaluated using resulting accuracy. Resulting score should be as high as possible, but not lower than baseline 53 percent for accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
@@ -38,7 +38,7 @@ Results were unsatisfactory. X_test set totally contained 205 images and model p
 ROC-AUC plot shows that true and false image sets are not just overlapping - for the model they are basically identically and it clearly doesn't learn as it should. This can be caused either by simplicity of the model, either by images which need more manipulation/augmentation to highlight their differences.
 To exclude model assumption, I've passed our dataset through much more powerful pre-trained model.
 ### 2. VGG Pretrained Convolution Neural Network
-<img src="./resources/02/vgg.jpg" alt="drawing" style="width:600px;"/>
+<img src="./resources/02/VGG.jpg" alt="drawing" style="width:600px;"/>
 
 Results of modeling were identical to the simple model. VGG is not able to catch the signal and recognize difference between two classes. And classes are absolutely the same for the model.
 
