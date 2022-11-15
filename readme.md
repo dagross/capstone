@@ -3,7 +3,7 @@
 # Final Project : Detecting fake images with Convolution Neural Network
 ### Problem Statement
 In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. Company would like to find a way to solve this problem without employee participation, since such approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, model should get image containing user's face and predict whether it is real or not.
-Project success will be evaluated using resulting f1 score (since we are interested in correct prediction for both classes) and accuracy score. Resulting scores should be as high as possible, but not lower than 53 percent, which is baseline accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
+Project success will be evaluated using resulting accuracy. Resulting score should be as high as possible, but not lower than baseline 53 percent for accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
 
 
 ## Brief Summary of Analysis and Interpretations
@@ -116,11 +116,12 @@ And here are modeling results:
 
 
 Model summary shows:
-1. We've definitely reached accuracy improvement of the model due to the augmentations.
-2. Comparing examples of matches and mismatches, it is clear, that model is much better with "easy" and "medium" fakes and fails more on "hard" ones. And that is understandable - even human eye sometimes can not surely say if those are real or not. Evidence of pixel map deformation are not obvious.
-3. ROC AUC. 0.5 would mean that "fake" and "real" classes are absolutely the same. 1 would say, that two classes are completely different and model can differentiate them. We have **0.561** - classes are extremely similar and overlapped for the model, but model is able to differ them. 
-4. The difference between non augmented and augmented models is **4 to 6** percents, on a big amount of data, this improvement will be very noticeable. 
-5. Training and testing accuracy scores look pretty good, model doesn't overfit, I'd say it is in a sweet spot. 
+1. We've reached  accuracy improvement of the model due to the augmentations (approx **2.5** percent).
+2. Comparing examples of matches and mismatches, it is noticeable, that model is much better with "easy" and "medium" fakes and fails more on "hard" ones, where even human eye sometimes can not surely say if those are real or not. Another interesting thing to explore - GradCam shows that CNN often uses only very small part of the modified, "fake" zone. 
+3. ROC AUC. 0.5 would mean that "fake" and "real" classes are absolutely the same. 1 would say, that two classes are completely different and model can differentiate them absolutely. We have **~0.58** - classes are very similar and overlapped for the model, but still it is able to differ them. 
+4. Despite the difference between non augmented and augmented models in **2-4** percents (which can be considered as low), being applied to big data, this difference may play a significant role - model definitely works and results are higher than baseline. 
+5. Training and testing accuracy scores look a bit overfitted. But this is a fair trade, when we getting a accuracy improvement from **56 to 58** percent with a given baseline at **53** (~40% improvement).  I've tried a lot of model variations, and this is the best result so far.
+
 
 Results of data augmentations are noticeable good. Basically, trying to detect fake images or fake part of images, we are trying to detect augmentations, with help of other augmentations I am applying to my dataset. So, despite minor success with "easy" fakes and "mid" fakes, summary shows, that "hard" fakes are more challenging for model.
 
@@ -130,4 +131,4 @@ https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 
 ## Conclusions 
-As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **0.6634** and f1 score at **0.6079**. A ~13 percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 35% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyse economical effect.
+As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **0.585**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.

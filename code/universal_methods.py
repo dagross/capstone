@@ -293,7 +293,7 @@ class Universal:
         auc = roc_auc_score(y_test, preds_labeled)
         fpr , tpr , thresholds = roc_curve ( y_test , preds_labeled)
         # adds previously predicted scores to one subplot 
-        ax12.text(0.5, 0.5, f'F1 Score : {f1} \n Precision : {precision} \n Recall : {recall} \n AUC : {auc}', horizontalalignment='center', verticalalignment='center', fontsize=35)
+        ax12.text(0.5, 0.5, f'F1 Score : {f1} \n Precision : {precision} \n Recall : {recall} \n AUC : {auc} \n Accuracy: {accuracy}', horizontalalignment='center', verticalalignment='center', fontsize=35)
         # turns off axis
         ax12.axis('off')
         ax13.plot(fpr,tpr)
