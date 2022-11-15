@@ -57,6 +57,7 @@ Results of modeling were identical to the simple model. VGG is not able to catch
 
 ### 3. EfficientNetB4 Pretrained Convolution Neural Network
 As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380 so I've re-generated dataset.
+
 <img src="./resources/02/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
 
 Still no good results, but we can see on accuracy subplot that model started learning, and processed dataset much faster because of the smaller dataset size. 
