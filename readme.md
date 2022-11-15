@@ -22,13 +22,15 @@ Project success will be evaluated using resulting accuracy. Resulting score shou
 ## Brief Summary of Analysis and Interpretations
 For solving the stated problem, I was provided with a dataset of images, contains **960** fake and **1081** real images, **2041** in total. Baseline accuracy is **52.9%**. Each image has a resolution 600x600 pixels with 3 color channels.
 
+
 <img src="./resources/02/General%20label%20distribution.jpg" alt="drawing" style="width:600px;"/>
  
 And here are some examples of fake images: 
 
 <img src="./resources/03/sample_images_e_m_h.jpg" alt="drawing" style="width:600px;"/>
 
-After EDA and basic check of images metadata, I've started modeling. This process was splited for 4 steps, by the number of each model I've tried. 
+After EDA and basic check of images metadata, I've started modeling. This process was splited for 4 steps, by the number of each model I've tried. Out of 4 models I've tried, the best one with the accuracy score of ~59% was Custom Convolution Neural Network with data Augmentation. More details [here](#45-custom-convolution-neural-network-with-data-augmentation).
+
 
 ### 1. Simple Convolution Neural Network
 
@@ -142,7 +144,7 @@ Model summary shows:
 2. Comparing examples of matches and mismatches, it is noticeable, that model is much better with "easy" and "medium" fakes and fails more on "hard" ones, where even human eye sometimes can not surely say if those are real or not. Another interesting thing to explore - GradCam shows that CNN often uses only very small part of the modified, "fake" zone. 
 3. ROC AUC. 0.5 would mean that "fake" and "real" classes are absolutely the same. 1 would say, that two classes are completely different and model can differentiate them absolutely. We have **~0.58** - classes are very similar and overlapped for the model, but still it is able to differ them. 
 4. Despite the difference between non augmented and augmented models in **2-4** percents (which can be considered as low), being applied to big data, this difference may play a significant role - model definitely works and results are higher than baseline. 
-5. Training and testing accuracy scores look a bit overfitted. But this is a fair trade, when we getting a accuracy improvement from **56 to 58** percent with a given baseline at **53** (~40% improvement).  I've tried a lot of model variations, and this is the best result so far.
+5. Training and testing accuracy scores look a bit overfitted. But this is a fair trade, when we getting a accuracy improvement from **56 to 59** percent with a given baseline at **53** (~40% improvement).  I've tried a lot of model variations, and this is the best result so far.
 
 
 Results of data augmentations are noticeable good. Basically, trying to detect fake images or fake part of images, we are trying to detect augmentations, with help of other augmentations I am applying to my dataset. So, despite minor success with "easy" fakes and "mid" fakes, summary shows, that "hard" fakes are more challenging for model.
@@ -153,7 +155,7 @@ https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 
 ## Conclusions 
-As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **0.585**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
+As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **~0.59**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
 
 
 
