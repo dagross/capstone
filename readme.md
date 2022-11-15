@@ -15,8 +15,8 @@
 
 
 ### Problem Statement
-"In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. The company would like to find a way to solve this problem without employee participation, since such an approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, the model should get an image containing a user's face and predict whether it is real or not.
-Project success will be evaluated using the resulting accuracy. The resulting score should be as high as possible, but not lower than the baseline 53 percent for accuracy for a given dataset. Despite the fact that the dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result."
+In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. The company would like to find a way to solve this problem without employee participation, since such an approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, the model should get an image containing a user's face and predict whether it is real or not.
+Project success will be evaluated using the resulting accuracy. The resulting score should be as high as possible, but not lower than the baseline 53 percent for accuracy for a given dataset. Despite the fact that the dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
 
 
 ## Brief Summary of Analysis and Interpretations
@@ -71,7 +71,7 @@ As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot 
 
 <img src="./resources/02/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
 
-Still no good results, but we can see on accuracy subplot that model started learning, and processed dataset much faster because of the smaller dataset size. 
+Still no good results, but we can see on accuracy subplot that model started learning and processed dataset much faster because of the smaller dataset size. 
 
 ### 4. Custom Convolution Neural Network
 [Link to notebook](files/../code/02_modeling.ipynb)
@@ -119,7 +119,7 @@ As a next stage, I've tried to further improve it's performance with augmentatio
 [Link to notebook](files/../code/03_augmentation_modeling.ipynb)
 
 To complete this stage, I've chosen 17 various techniques:
-ADD Link
+
 |Augmentation name|Description|
 |:---:|:---:| 
 |AdditiveGaussianNoise|Add noise sampled from gaussian distributions elementwise to images|
@@ -146,14 +146,6 @@ And here are modeling results:
 
 <img src="./resources/03/Custom_model_augmented.jpg" alt="drawing" style="width:600px;"/>
 
-## Summary Results Table
-Model name |Accuracy|        
-|:---:|:---:| 
-|Simple Convolution Neural Network (baseline)|0.53|
-|VGG Pretrained Convolution Neural Network|0.53|
-|EfficientNetB4 Pretrained Convolution Neural Network|0.53|
-|Custom Convolution Neural Network|0.56|
-|Custom Convolution Neural Network with Augmentations|**0.58**|
 
 Model summary shows:
 1. We've reached  accuracy improvement of the model due to the augmentations (approx **2.5** percent).
@@ -164,11 +156,20 @@ Model summary shows:
 
 
 Results of data augmentations are noticeable good. Basically, trying to detect fake images or fake part of images, we are trying to detect augmentations, with help of other augmentations I am applying to my dataset. So, despite minor success with "easy" fakes and "mid" fakes, summary shows, that "hard" fakes are more challenging for model.
+## Summary Results Table
+Model name |Accuracy|        
+|:---:|:---:| 
+|Simple Convolution Neural Network (baseline)|0.53|
+|VGG Pretrained Convolution Neural Network|0.53|
+|EfficientNetB4 Pretrained Convolution Neural Network|0.53|
+|Custom Convolution Neural Network|0.56|
+|Custom Convolution Neural Network with Augmentations|**0.59**|
 
 ## Next steps
 I would definitely want to apply Photo Forensics approach to detect modified parts of the images. This method looks very promising, although its implementation requires understanding of photo algorithms and math behind.
 https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 
-## Conclusions 
+## Conclusions
+The dataset I've been working on in this project is a good example of the real situation with fake images. Every day, new approaches and technologies appear and some examples of fake shows that in the near future it is unlikely that a person will be able to correctly determine the authenticity of the image. For that purpose we will need to develop new techniques that will be able to look further and deeper into image structure. For now, considering difficulty levels of the fake images, I would say, that this project's results are successful.
 As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **~0.59**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
