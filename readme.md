@@ -15,17 +15,21 @@
 
 
 ### Problem Statement
-In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. Company would like to find a way to solve this problem without employee participation, since such approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, model should get image containing user's face and predict whether it is real or not.
-Project success will be evaluated using resulting accuracy. Resulting score should be as high as possible, but not lower than baseline 53 percent for accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
+"In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. The company would like to find a way to solve this problem without employee participation, since such an approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, the model should get an image containing a user's face and predict whether it is real or not.
+Project success will be evaluated using the resulting accuracy. The resulting score should be as high as possible, but not lower than the baseline 53 percent for accuracy for a given dataset. Despite the fact that the dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result."
 
 
 ## Brief Summary of Analysis and Interpretations
+[Link to notebook](files/../code/01%20data_acq_and_eda.ipynb)
+
+
 For solving the stated problem, I was provided with a dataset of images, contains **960** fake and **1081** real images, **2041** in total. Baseline accuracy is **52.9%**. Each image has a resolution 600x600 pixels with 3 color channels.
 
 
 <img src="./resources/02/General%20label%20distribution.jpg" alt="drawing" style="width:600px;"/>
- 
-And here are some examples of fake images: 
+
+My “fake” class consisted of three different difficulty levels: images that were easy to recognize as fake, images that were difficult to recognize as fake, and images that were in the middle. You can see these differences in the image above/below:
+
 
 <img src="./resources/03/sample_images_e_m_h.jpg" alt="drawing" style="width:600px;"/>
 
@@ -33,6 +37,7 @@ After EDA and basic check of images metadata, I've started modeling. This proces
 
 
 ### 1. Simple Convolution Neural Network
+[Link to notebook](files/../code/02_modeling.ipynb)
 
 Model structure:
 
@@ -53,11 +58,15 @@ Results were unsatisfactory. X_test set totally contained 205 images and model p
 ROC-AUC plot shows that true and false image sets are not just overlapping - for the model they are basically identically and it clearly doesn't learn as it should. This can be caused either by simplicity of the model, either by images which need more manipulation/augmentation to highlight their differences.
 To exclude model assumption, I've passed our dataset through much more powerful pre-trained model.
 ### 2. VGG Pretrained Convolution Neural Network
+[Link to notebook](files/../code/02_modeling.ipynb)
+
 <img src="./resources/02/VGG.jpg" alt="drawing" style="width:600px;"/>
 
 Results of modeling were identical to the simple model. VGG is not able to catch the signal and recognize difference between two classes. And classes are absolutely the same for the model.
 
 ### 3. EfficientNetB4 Pretrained Convolution Neural Network
+[Link to notebook](files/../code/02_modeling.ipynb)
+
 As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot of Kaggle and Facebook competition winners. It has input size 380x380 so I've re-generated dataset.
 
 <img src="./resources/02/EfficientNetB4.jpg" alt="drawing" style="width:600px;"/>
@@ -65,6 +74,8 @@ As second pre-trained model, I've chosen EfficientNetB4, that was used by a lot 
 Still no good results, but we can see on accuracy subplot that model started learning, and processed dataset much faster because of the smaller dataset size. 
 
 ### 4. Custom Convolution Neural Network
+[Link to notebook](files/../code/02_modeling.ipynb)
+
 So, my next attempt was custom model with a much smaller input images size 150x150x3. That greatly increased iteration speed and let me to manually adjust layers for each iteration.
 
 Model structure:
@@ -101,9 +112,14 @@ All scores are beyond baseline. Although, due to AUC score, both classes are ver
 For both matches and mismatches, it was hard to highlight common features - fake types were mixed, so as color schemes, photo perspective, facetype due to sex, etc. But still, we had a robust result. Difference in scores between first three models and the last one shows, that change of input images positively affected model performance, in addition to much less time needed to process.
 As a next stage, I've tried to further improve it's performance with augmentation technics and analyze results more deeply.
 
-### 4.5 Custom Convolution Neural Network with data Augmentation
-To complete this stage, I've chosen 17 various technics:
+<br />
 
+### 4.5 Custom Convolution Neural Network with data Augmentation
+
+[Link to notebook](files/../code/03_augmentation_modeling.ipynb)
+
+To complete this stage, I've chosen 17 various techniques:
+ADD Link
 |Augmentation name|Description|
 |:---:|:---:| 
 |AdditiveGaussianNoise|Add noise sampled from gaussian distributions elementwise to images|
@@ -156,8 +172,3 @@ https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 ## Conclusions 
 As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **~0.59**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
-
-
-
-Separate table with results
-Links to the sections 
