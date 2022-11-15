@@ -1,6 +1,18 @@
 
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)                                                 
 # Final Project : Detecting Fake Images with Convolution Neural Network
+
+[Problem Statement](#problem-statement)\
+[Brief Summary of Analysis and Interpretations](#brief-summary-of-analysis-and-interpretations)
+[1. Simple Convolution Neural Network](#1-simple-convolution-neural-network)
+[2. VGG Pretrained Convolution Neural Network](#2-vgg-pretrained-convolution-neural-network)
+[3. EfficientNetB4 Pretrained Convolution Neural Network](#3-efficientnetb4-pretrained-convolution-neural-network)
+[4. Custom Convolution Neural Network](#4-custom-convolution-neural-network)
+[4.5 Custom Convolution Neural Network with data Augmentation](#45-custom-convolution-neural-network-with-data-augmentation)
+[Next steps](#next-steps)
+[Conclusions](#Conclusions)
+
+
 ### Problem Statement
 In the past few years, there has been a significant increase in the creation of fake accounts with artificially generated images on the Facebook. Company would like to find a way to solve this problem without employee participation, since such approach is costly and ineffective. As a data scientist working for Meta, I have been tasked to solve this issue by building a classifying model that could detect fake images. As an input, model should get image containing user's face and predict whether it is real or not.
 Project success will be evaluated using resulting accuracy. Resulting score should be as high as possible, but not lower than baseline 53 percent for accuracy for a given dataset. Despite the fact, that dataset contains different levels of fake quality images, for the purposes of this project we will use binary classification, since there is no need for the company to predict how complicated for the model was to generate predicting result.
@@ -125,10 +137,15 @@ Model summary shows:
 
 Results of data augmentations are noticeable good. Basically, trying to detect fake images or fake part of images, we are trying to detect augmentations, with help of other augmentations I am applying to my dataset. So, despite minor success with "easy" fakes and "mid" fakes, summary shows, that "hard" fakes are more challenging for model.
 
-## Next steps:
-I would definitely want to apply Photo Forensics approach to detect modified parts of the images. This method looks very promising, although its implementation requires understanding of photo algorithms and math behind, it looks very promising.
+## Next steps
+I would definitely want to apply Photo Forensics approach to detect modified parts of the images. This method looks very promising, although its implementation requires understanding of photo algorithms and math behind.
 https://farid.berkeley.edu/downloads/publications/wifs17.pdf
 
 
 ## Conclusions 
 As it was specified in the problem statement, model results exceeds baseline accuracy (**0.529**)  with accuracy at **0.585**. A **~5.6** percent increase at fake detecting accuracy could significantly improve antifake algorithms. We recommend our company stakeholders using this model, however, as there is still a mistake in 41% of classifications, most optimal solution would be to implement it first on a small testing campaigns, to deeply analyze model effectiveness.
+
+
+
+Separate table with results
+Links to the sections 
